@@ -1,16 +1,16 @@
 # Product Spec (Draft)
 
 ## Summary
-A Rails app for generating sewing patterns from user-defined parameters across multiple products. The first product is a simple 3D zipper pouch to validate the workflow. Users tune measurements (length, width, depth, seam allowance, pocket placement), see a live preview rendered from server-generated SVG, and export a complete pattern packet (SVG pieces, printable PDF, and a text instruction file). Core logic is a Ruby geometry engine that produces accurate pattern pieces and assembly steps.
+A Rails app for generating sewing patterns from user-defined parameters across multiple assemblies. The first assembly is a simple 3D zipper pouch to validate the workflow. Users tune measurements (length, width, depth, seam allowance, pocket placement), see a live preview rendered from server-generated SVG, and export a complete pattern packet (SVG pieces, printable PDF, and a text instruction file). Core logic is a geometry engine that produces accurate pattern pieces and assembly steps from stored assembly definitions.
 
 ## Goals
 - Make it easy to define pouch parameters and immediately preview the result.
 - Generate accurate, printable pattern pieces and clear assembly steps.
 - Produce exportable assets suitable for home printing and sewing.
-- Build a foundation that supports multiple product types over time.
+- Build a foundation that supports multiple assembly types over time.
 
 ## Non-Goals (for now)
-- Multi-item projects beyond the simple 3D zipper pouch (first product only).
+- Multi-item projects beyond the simple 3D zipper pouch (first assembly only).
 - Client-side-only rendering or offline-first behavior.
 - Advanced sizing libraries or garment grading.
 
@@ -22,13 +22,13 @@ A Rails app for generating sewing patterns from user-defined parameters across m
 Reference sketch: `Sewing pattern app.png` (repo root).
 
 Layout:
-- Left column: large **Preview** area showing the current product visualization.
+- Left column: large **Preview** area showing the current assembly visualization.
 - Bottom row (left): **Panels** strip showing thumbnails for individual pattern pieces.
 - Right column: **Options** panel with inputs and controls.
 - Bottom right: **Export** panel with name field and export actions.
 
 Options panel (as sketched):
-- Product-specific measurement inputs (initially: Height, Width, Depth for the pouch).
+- Assembly-specific measurement inputs (initially: Height, Width, Depth for the pouch).
 - Zipper location selector (icon/toggle set: top/left/right/bottom).
 - Zipper style selector (dropdown).
 - Pocket controls (not fully specified yet).
@@ -38,10 +38,10 @@ Export panel (as sketched):
 - Primary action: download/export pattern packet.
 - Secondary action: share.
 
-Note: Admin/project management UI will be added later; this view is the core functionality. The layout should remain product-agnostic, with options changing per product type.
+Note: Admin/project management UI will be added later; this view is the core functionality. The layout should remain assembly-agnostic, with options changing per assembly type.
 
 ## Options Spec (Main View)
-All options update the preview and pattern output. Inputs accept numeric values, with inline validation and units shown. The options panel is product-agnostic; individual products define their own parameter sets.
+All options update the preview and pattern output. Inputs accept numeric values, with inline validation and units shown. The options panel is assembly-agnostic; individual assemblies define their own parameter sets.
 
 Units:
 - Default: inches.
@@ -94,17 +94,25 @@ Behavior:
 
 ## Core User Flow
 1. User lands on a Projects list and creates a new project or opens an existing one.
-2. User enters the builder view for that project (Design Session UUID).
-3. User adjusts parameters (length, width, depth, seam allowance, pocket placement).
-4. App saves a snapshot of the parameters to the session.
-5. App renders a live SVG preview (server-generated).
-6. User exports a pattern packet.
-7. App delivers SVG pieces, a PDF print layout, and a text instruction file.
+2. Project is created with an assembly definition (initially zipper pouch).
+3. User enters the builder view for that project (Design Session UUID).
+4. User adjusts parameters (length, width, depth, seam allowance, pocket placement).
+5. App saves a snapshot of the parameters to the session.
+6. App renders a live SVG preview (server-generated).
+7. User exports a pattern packet.
+8. App delivers SVG pieces, a PDF print layout, and a text instruction file.
 
 ## Design Sessions (State + UUID)
 - Every design session has a UUID.
 - Each save stores a snapshot of the current parameter set plus optional notes.
+- Sessions reference an assembly definition (the pattern logic source).
 - Sessions are the unit for future user ownership, sharing, and history.
+
+## Assemblies (Pattern Definitions)
+- Assemblies are stored definitions that describe panels, edges, seams, and steps.
+- Each project references an assembly definition (by ID or version).
+- The geometry engine interprets the definition + parameters to produce output.
+- Assemblies are versioned to keep projects reproducible over time.
 
 ## Inputs (Parameters)
 - Length
@@ -124,7 +132,7 @@ Behavior:
 
 ## System Notes
 - Rails app serves UI and generates SVG server-side.
-- Ruby geometry engine builds pattern pieces and assembly steps from parameters.
+- Geometry engine interprets stored assembly definitions and parameters.
 
 ## Open Questions
 - What units are supported (inches, cm) and how are they displayed?

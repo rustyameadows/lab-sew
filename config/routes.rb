@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :assemblies, controller: "assembly_definitions", only: %i[index new create edit update]
   resources :projects, only: %i[index create destroy], param: :uuid
   get "projects/:uuid" => "builder#show", as: :project_builder
+  get "design_sessions/:uuid/geometry" => "design_sessions#geometry", as: :design_session_geometry
   resources :design_sessions, only: %i[create show update], param: :uuid
 
   # Defines the root path route ("/")

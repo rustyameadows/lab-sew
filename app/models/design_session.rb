@@ -1,16 +1,6 @@
 class DesignSession < ApplicationRecord
   DEFAULT_PARAMS = {
-    units: "in",
-    height: 9.0,
-    width: 11.0,
-    depth: 1.5,
-    seam_allowance: 0.25,
-    zipper_locations: ["top"],
-    zipper_style: "standard",
-    pocket: {
-      enabled: false,
-      placement: "center"
-    }
+    units: "in"
   }.freeze
 
   belongs_to :assembly_definition, optional: true

@@ -1,3 +1,5 @@
+require Rails.root.join("app/services/patterns/geometry_engine").to_s
+
 class DesignSessionsController < ApplicationController
   protect_from_forgery with: :null_session
 
@@ -26,6 +28,23 @@ class DesignSessionsController < ApplicationController
     end
   end
 
+  def geometry
+    design_session = DesignSession.find_by!(uuid: params[:uuid])
+    assembly = design_session.assembly_definition
+
+    unless assembly
+      render json: { error: "Assembly not set for this project." }, status: :unprocessable_entity
+      return
+    end
+
+    defaults = assembly.parameter_defaults
+    params_snapshot = (design_session.params_snapshot || {}).deep_stringify_keys
+    effective_params = defaults.merge(params_snapshot)
+
+    geometry = Patterns::GeometryEngine.new(assembly_definition: assembly, params: effective_params).call
+    render json: geometry
+  end
+
   private
 
   def design_session_params
@@ -34,16 +53,7 @@ class DesignSessionsController < ApplicationController
       :product_type,
       :assembly_definition_id,
       :notes,
-      params_snapshot: [
-        :units,
-        :height,
-        :width,
-        :depth,
-        :seam_allowance,
-        :zipper_style,
-        { zipper_locations: [] },
-        { pocket: %i[enabled placement] }
-      ]
+      params_snapshot: {}
     )
   end
 

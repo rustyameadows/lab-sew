@@ -8,4 +8,4 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-AssemblyDefinition.default
+AssemblyDefinition.seed_defaults

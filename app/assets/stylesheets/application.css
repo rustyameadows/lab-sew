@@ -8,3 +8,136 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+body {
+  margin: 0;
+  padding: 24px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #1f1f1f;
+  background: #f6f3ef;
+}
+
+.builder__header {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.builder__subtitle {
+  margin: 8px 0 0;
+  max-width: 70ch;
+}
+
+.builder__footer {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.builder__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  grid-template-rows: minmax(360px, 1fr) auto;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.builder__preview,
+.builder__options,
+.builder__panels,
+.builder__export {
+  background: #ffffff;
+  border: 1px solid #e3ded7;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.preview__canvas {
+  margin-top: 12px;
+  height: 280px;
+  border: 1px dashed #c9c3bb;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b6460;
+  background: #fbfaf8;
+}
+
+.builder__options form,
+.builder__export form {
+  display: grid;
+  gap: 16px;
+}
+
+.builder__options fieldset,
+.builder__export fieldset {
+  border: 1px solid #e3ded7;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.builder__options label,
+.builder__export label {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.options__toggle-group {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px 12px;
+  margin-top: 8px;
+}
+
+.panels__strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.panel__thumb {
+  border: 1px dashed #c9c3bb;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  color: #6b6460;
+  background: #fbfaf8;
+}
+
+.export__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+button {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d4cdc5;
+  background: #f1ece6;
+  cursor: pointer;
+}
+
+input,
+select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d4cdc5;
+}
+
+@media (max-width: 900px) {
+  .builder__layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .panels__strip,
+  .export__actions {
+    grid-template-columns: 1fr 1fr;
+  }
+}

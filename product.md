@@ -74,6 +74,7 @@ Validation rules:
 
 Zipper location:
 - Choices: Top, Left, Right, Bottom (icon toggles).
+- Multi-select (user can choose one, multiple, or all).
 - Default: Top.
 - Affects preview orientation and pattern pieces.
 
@@ -92,12 +93,13 @@ Behavior:
 - Options panel shows brief helper text for unusual constraints.
 
 ## Core User Flow
-1. User opens the pouch builder (new or existing Design Session UUID).
-2. User adjusts parameters (length, width, depth, seam allowance, pocket placement).
-3. App saves a snapshot of the parameters to the session.
-4. App renders a live SVG preview (server-generated).
-5. User exports a pattern packet.
-6. App delivers SVG pieces, a PDF print layout, and a text instruction file.
+1. User lands on a Projects list and creates a new project or opens an existing one.
+2. User enters the builder view for that project (Design Session UUID).
+3. User adjusts parameters (length, width, depth, seam allowance, pocket placement).
+4. App saves a snapshot of the parameters to the session.
+5. App renders a live SVG preview (server-generated).
+6. User exports a pattern packet.
+7. App delivers SVG pieces, a PDF print layout, and a text instruction file.
 
 ## Design Sessions (State + UUID)
 - Every design session has a UUID.

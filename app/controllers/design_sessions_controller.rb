@@ -8,7 +8,6 @@ class DesignSessionsController < ApplicationController
 
   def create
     design_session = DesignSession.new(design_session_params)
-    design_session.params_snapshot = default_params if design_session.params_snapshot.blank?
 
     if design_session.save
       render json: serialize(design_session), status: :created
@@ -34,24 +33,17 @@ class DesignSessionsController < ApplicationController
       :name,
       :product_type,
       :notes,
-      params_snapshot: {}
+      params_snapshot: [
+        :units,
+        :height,
+        :width,
+        :depth,
+        :seam_allowance,
+        :zipper_style,
+        { zipper_locations: [] },
+        { pocket: %i[enabled placement] }
+      ]
     )
-  end
-
-  def default_params
-    {
-      units: "in",
-      height: 9.0,
-      width: 11.0,
-      depth: 1.5,
-      seam_allowance: 0.25,
-      zipper_location: "top",
-      zipper_style: "standard",
-      pocket: {
-        enabled: false,
-        placement: "center"
-      }
-    }
   end
 
   def serialize(design_session)

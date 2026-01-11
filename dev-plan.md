@@ -30,6 +30,13 @@ Goal: define how a design is represented, stored, and versioned.
 - Create migrations and basic CRUD endpoints (create/read/update).
 - Ensure all operations are idempotent for “save state by UUID”.
 
+Status (completed):
+- Design sessions model + UUID + JSON snapshot implemented.
+- Default parameter schema added (including multi-select zipper locations and pocket settings).
+- Projects index created; builder view now lives at `/projects/:uuid`.
+- Autosave wired for project name and option parameters (debounced PATCH).
+- Builder inputs now repopulate from saved session values.
+
 ## 3) Main UI scaffold (matches sketch)
 Goal: build the layout while keeping it functional.
 - Layout regions: Preview, Options, Panels strip, Export panel.

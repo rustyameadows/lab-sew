@@ -1,7 +1,179 @@
 <main class="builder">
-  <h1>Pattern Builder</h1>
-  <p>
-    This is the initial scaffold for the main design view. The first product is a
-    simple 3D zipper pouch, with more products planned later.
-  </p>
+  <header class="builder__header">
+  </header>
+
+  <% params_snapshot = DesignSession.default_params.merge((@design_session.params_snapshot || {}).deep_stringify_keys) %>
+  <% pocket = params_snapshot["pocket"] || {} %>
+  <% zipper_locations = Array(params_snapshot["zipper_locations"]) %>
+
+  <section class="builder__layout">
+    <section class="builder__preview" aria-label="Preview">
+      <h2>Preview</h2>
+      <div class="preview__canvas" role="img" aria-label="Pattern preview placeholder">
+        SVG preview will render here.
+      </div>
+    </section>
+
+    <aside class="builder__options" aria-label="Options">
+      <h2>Options</h2>
+      <form
+        class="options__form"
+        data-controller="design-session-params"
+        data-design-session-params-uuid-value="<%= @design_session.uuid %>"
+        data-action="input->design-session-params#queueSave change->design-session-params#queueSave"
+      >
+        <fieldset>
+          <legend>Measurements</legend>
+          <label>
+            Height
+            <input
+              type="number"
+              step="0.1"
+              name="height"
+              placeholder="9"
+              value="<%= params_snapshot["height"] %>"
+            />
+          </label>
+          <label>
+            Width
+            <input
+              type="number"
+              step="0.1"
+              name="width"
+              placeholder="11"
+              value="<%= params_snapshot["width"] %>"
+            />
+          </label>
+          <label>
+            Depth
+            <input
+              type="number"
+              step="0.1"
+              name="depth"
+              placeholder="1.5"
+              value="<%= params_snapshot["depth"] %>"
+            />
+          </label>
+          <label>
+            Seam allowance
+            <input
+              type="number"
+              step="0.1"
+              name="seam_allowance"
+              placeholder="0.25"
+              value="<%= params_snapshot["seam_allowance"] %>"
+            />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Zipper location</legend>
+          <div class="options__toggle-group" role="group" aria-label="Zipper location">
+            <label>
+              <input
+                type="checkbox"
+                name="zipper_locations[]"
+                value="top"
+                <%= "checked" if zipper_locations.include?("top") %>
+              />
+              Top
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="zipper_locations[]"
+                value="left"
+                <%= "checked" if zipper_locations.include?("left") %>
+              />
+              Left
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="zipper_locations[]"
+                value="right"
+                <%= "checked" if zipper_locations.include?("right") %>
+              />
+              Right
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="zipper_locations[]"
+                value="bottom"
+                <%= "checked" if zipper_locations.include?("bottom") %>
+              />
+              Bottom
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Zipper style</legend>
+          <label>
+            Style
+            <select name="zipper_style">
+              <option value="standard" <%= "selected" if params_snapshot["zipper_style"] == "standard" %>>Standard</option>
+              <option value="exposed" <%= "selected" if params_snapshot["zipper_style"] == "exposed" %>>Exposed</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Pocket</legend>
+          <label>
+            <input type="checkbox" name="pocket_enabled" <%= "checked" if pocket["enabled"] %> />
+            Enable pocket
+          </label>
+          <label>
+            Placement
+            <select name="pocket_placement">
+              <option value="top" <%= "selected" if pocket["placement"] == "top" %>>Top</option>
+              <option value="center" <%= "selected" if pocket["placement"] == "center" %>>Center</option>
+              <option value="bottom" <%= "selected" if pocket["placement"] == "bottom" %>>Bottom</option>
+            </select>
+          </label>
+        </fieldset>
+      </form>
+    </aside>
+
+    <section class="builder__panels" aria-label="Panels">
+      <h2>Panels</h2>
+      <div class="panels__strip">
+        <div class="panel__thumb">Front</div>
+        <div class="panel__thumb">Back</div>
+        <div class="panel__thumb">Gusset</div>
+        <div class="panel__thumb">Zipper</div>
+      </div>
+    </section>
+
+    <aside class="builder__export" aria-label="Export">
+      <h2>Export</h2>
+      <form class="export__form">
+        <label>
+          Project name
+          <input
+            type="text"
+            name="project_name"
+            placeholder="Untitled project"
+            value="<%= @design_session.name %>"
+            data-controller="design-session-name"
+            data-design-session-name-uuid-value="<%= @design_session.uuid %>"
+            data-action="input->design-session-name#queueSave"
+          />
+        </label>
+        <div class="export__actions">
+          <button type="button">Download packet</button>
+          <button type="button">Share</button>
+        </div>
+      </form>
+    </aside>
+  </section>
+
+  <footer class="builder__footer">
+    <%= link_to "Back to projects", projects_path, class: "builder__link" %>
+    <%= button_to "Delete project", project_path(@design_session.uuid),
+      method: :delete,
+      data: { turbo_confirm: "Delete this project?" } %>
+  </footer>
 </main>

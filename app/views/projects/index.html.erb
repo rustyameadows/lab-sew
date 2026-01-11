@@ -1,0 +1,23 @@
+<main class="projects">
+  <header class="projects__header">
+    <h1>Projects</h1>
+    <%= button_to "New project", projects_path, method: :post %>
+  </header>
+
+  <section class="projects__list">
+    <% if @design_sessions.any? %>
+      <ul>
+        <% @design_sessions.each do |session| %>
+          <li>
+            <a href="<%= project_builder_path(session.uuid) %>">
+              <%= session.name.presence || "Untitled project" %>
+            </a>
+            <small><%= session.uuid %></small>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No projects yet. Create one to start designing.</p>
+    <% end %>
+  </section>
+</main>

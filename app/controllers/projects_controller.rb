@@ -1,6 +1,7 @@
 class ProjectsController < ApplicationController
   def index
     @design_sessions = DesignSession.order(updated_at: :desc)
+    @assemblies = AssemblyDefinition.order(:name)
   end
 
   def create

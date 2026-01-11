@@ -46,6 +46,15 @@ Goal: store assembly logic as data that can scale to many types.
 - Link `DesignSession` to an `assembly_definition_id`.
 - Seed the initial zipper pouch assembly definition.
 
+Status (in progress):
+- Assembly definitions model and DB table added.
+- Design sessions now reference an assembly definition on create.
+- Initial zipper pouch definition stub exists (empty panels/seams/steps).
+
+Status (completed):
+- Assembly definitions are persisted and seeded via `db/seeds.rb`.
+- Existing design sessions backfilled to the default assembly definition.
+
 ## 4) Main UI scaffold (matches sketch)
 Goal: build the layout while keeping it functional.
 - Layout regions: Preview, Options, Panels strip, Export panel.
@@ -55,6 +64,7 @@ Goal: build the layout while keeping it functional.
 Status (completed):
 - Layout scaffold implemented and matches the sketch structure.
 - Projects index added; builder view is routed per project.
+- Autosave wired for project name + option parameters with values persisted.
 
 ## 5) Geometry engine (interprets assemblies + parameters)
 Goal: generate accurate pieces from assembly definitions + parameters.

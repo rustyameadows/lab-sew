@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  resources :assemblies, controller: "assembly_definitions", only: %i[index new create edit update]
   resources :projects, only: %i[index create destroy], param: :uuid
   get "projects/:uuid" => "builder#show", as: :project_builder
   resources :design_sessions, only: %i[create show update], param: :uuid

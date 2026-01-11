@@ -32,6 +32,7 @@ class DesignSessionsController < ApplicationController
     params.fetch(:design_session, {}).permit(
       :name,
       :product_type,
+      :assembly_definition_id,
       :notes,
       params_snapshot: [
         :units,

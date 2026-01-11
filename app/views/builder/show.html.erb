@@ -5,6 +5,7 @@
   <% params_snapshot = DesignSession.default_params.merge((@design_session.params_snapshot || {}).deep_stringify_keys) %>
   <% pocket = params_snapshot["pocket"] || {} %>
   <% zipper_locations = Array(params_snapshot["zipper_locations"]) %>
+  <% assembly_selected = @design_session.assembly_definition.present? %>
 
   <section class="builder__layout">
     <section class="builder__preview" aria-label="Preview">
@@ -16,12 +17,35 @@
 
     <aside class="builder__options" aria-label="Options">
       <h2>Options</h2>
-      <form
-        class="options__form"
-        data-controller="design-session-params"
-        data-design-session-params-uuid-value="<%= @design_session.uuid %>"
-        data-action="input->design-session-params#queueSave change->design-session-params#queueSave"
-      >
+
+      <div class="options__assembly">
+        <label>
+          Assembly
+          <select
+            name="assembly_definition_id"
+            data-controller="design-session-assembly"
+            data-design-session-assembly-uuid-value="<%= @design_session.uuid %>"
+            data-action="change->design-session-assembly#save"
+          >
+            <option value="">Select assembly</option>
+            <% @assemblies.each do |assembly| %>
+              <option value="<%= assembly.id %>" <%= "selected" if @design_session.assembly_definition_id == assembly.id %>>
+                <%= assembly.name %>
+              </option>
+            <% end %>
+          </select>
+        </label>
+        <%= link_to "Manage assemblies", assemblies_path, class: "builder__link" %>
+      </div>
+
+      <% if assembly_selected %>
+        <% if @design_session.assembly_definition&.key == "zipper_pouch" %>
+          <form
+            class="options__form"
+            data-controller="design-session-params"
+            data-design-session-params-uuid-value="<%= @design_session.uuid %>"
+            data-action="input->design-session-params#queueSave change->design-session-params#queueSave"
+          >
         <fieldset>
           <legend>Measurements</legend>
           <label>
@@ -135,6 +159,12 @@
           </label>
         </fieldset>
       </form>
+        <% else %>
+          <p>Options for this assembly are not defined yet.</p>
+        <% end %>
+      <% else %>
+        <p>Select an assembly to configure options.</p>
+      <% end %>
     </aside>
 
     <section class="builder__panels" aria-label="Panels">

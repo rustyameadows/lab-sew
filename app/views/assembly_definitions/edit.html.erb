@@ -1,0 +1,8 @@
+<main class="assemblies">
+  <header class="assemblies__header">
+    <h1>Edit assembly</h1>
+    <%= link_to "Back to assemblies", assemblies_path, class: "builder__link" %>
+  </header>
+
+  <%= render "form", assembly: @assembly %>
+</main>

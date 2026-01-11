@@ -1,0 +1,21 @@
+<%= form_with model: assembly, url: assembly.persisted? ? assembly_path(assembly) : assemblies_path do |form| %>
+  <label>
+    Key
+    <%= form.text_field :key %>
+  </label>
+  <label>
+    Name
+    <%= form.text_field :name %>
+  </label>
+  <label>
+    Version
+    <%= form.number_field :version, min: 1 %>
+  </label>
+  <label>
+    Definition JSON
+    <%= form.text_area :definition_json, value: JSON.pretty_generate(assembly.definition_json || {}), rows: 14 %>
+  </label>
+  <div>
+    <%= form.submit assembly.persisted? ? "Update assembly" : "Create assembly" %>
+  </div>
+<% end %>

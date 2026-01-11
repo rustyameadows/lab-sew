@@ -13,6 +13,8 @@ class DesignSession < ApplicationRecord
     }
   }.freeze
 
+  belongs_to :assembly_definition, optional: true
+
   before_validation :ensure_uuid, on: :create
   before_validation :ensure_params_snapshot, on: :create
 
@@ -37,4 +39,5 @@ class DesignSession < ApplicationRecord
   def ensure_params_snapshot
     self.params_snapshot = self.class.default_params if params_snapshot.blank?
   end
+
 end

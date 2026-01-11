@@ -1,0 +1,20 @@
+<main class="assemblies">
+  <header class="assemblies__header">
+    <h1>Assemblies</h1>
+    <%= link_to "New assembly", new_assembly_path, class: "builder__link" %>
+  </header>
+
+  <% if @assemblies.any? %>
+    <ul>
+      <% @assemblies.each do |assembly| %>
+        <li>
+          <strong><%= assembly.name %></strong>
+          <small>(<%= assembly.key %> v<%= assembly.version %>)</small>
+          <%= link_to "Edit", edit_assembly_path(assembly), class: "builder__link" %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No assemblies yet.</p>
+  <% end %>
+</main>

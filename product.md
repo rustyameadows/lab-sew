@@ -1,15 +1,16 @@
 # Product Spec (Draft)
 
 ## Summary
-A Rails app that generates sewing patterns from user-defined parameters for a simple 3D zipper pouch. Users tune measurements (length, width, depth, seam allowance, pocket placement), see a live preview rendered from server-generated SVG, and export a complete pattern packet (SVG pieces, printable PDF, and a text instruction file). Core logic is a Ruby geometry engine that produces accurate pattern pieces and assembly steps.
+A Rails app for generating sewing patterns from user-defined parameters across multiple products. The first product is a simple 3D zipper pouch to validate the workflow. Users tune measurements (length, width, depth, seam allowance, pocket placement), see a live preview rendered from server-generated SVG, and export a complete pattern packet (SVG pieces, printable PDF, and a text instruction file). Core logic is a Ruby geometry engine that produces accurate pattern pieces and assembly steps.
 
 ## Goals
 - Make it easy to define pouch parameters and immediately preview the result.
 - Generate accurate, printable pattern pieces and clear assembly steps.
 - Produce exportable assets suitable for home printing and sewing.
+- Build a foundation that supports multiple product types over time.
 
 ## Non-Goals (for now)
-- Multi-item projects beyond the simple 3D zipper pouch.
+- Multi-item projects beyond the simple 3D zipper pouch (first product only).
 - Client-side-only rendering or offline-first behavior.
 - Advanced sizing libraries or garment grading.
 
@@ -21,13 +22,13 @@ A Rails app that generates sewing patterns from user-defined parameters for a si
 Reference sketch: `Sewing pattern app.png` (repo root).
 
 Layout:
-- Left column: large **Preview** area showing the 3D pouch visualization.
+- Left column: large **Preview** area showing the current product visualization.
 - Bottom row (left): **Panels** strip showing thumbnails for individual pattern pieces.
 - Right column: **Options** panel with inputs and controls.
 - Bottom right: **Export** panel with name field and export actions.
 
 Options panel (as sketched):
-- Measurement inputs: Height, Width, Depth.
+- Product-specific measurement inputs (initially: Height, Width, Depth for the pouch).
 - Zipper location selector (icon/toggle set: top/left/right/bottom).
 - Zipper style selector (dropdown).
 - Pocket controls (not fully specified yet).
@@ -37,10 +38,10 @@ Export panel (as sketched):
 - Primary action: download/export pattern packet.
 - Secondary action: share.
 
-Note: Admin/project management UI will be added later; this view is the core functionality.
+Note: Admin/project management UI will be added later; this view is the core functionality. The layout should remain product-agnostic, with options changing per product type.
 
 ## Options Spec (Main View)
-All options update the preview and pattern output. Inputs accept numeric values, with inline validation and units shown.
+All options update the preview and pattern output. Inputs accept numeric values, with inline validation and units shown. The options panel is product-agnostic; individual products define their own parameter sets.
 
 Units:
 - Default: inches.

@@ -10,8 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 0) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_11_142608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "design_sessions", force: :cascade do |t|
+    t.string "uuid", null: false
+    t.string "product_type", default: "zipper_pouch", null: false
+    t.json "params_snapshot", default: {}, null: false
+    t.string "name"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uuid"], name: "index_design_sessions_on_uuid", unique: true
+  end
 end

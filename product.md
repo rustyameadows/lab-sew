@@ -91,11 +91,17 @@ Behavior:
 - Options panel shows brief helper text for unusual constraints.
 
 ## Core User Flow
-1. User opens the pouch builder.
+1. User opens the pouch builder (new or existing Design Session UUID).
 2. User adjusts parameters (length, width, depth, seam allowance, pocket placement).
-3. App renders a live SVG preview (server-generated).
-4. User exports a pattern packet.
-5. App delivers SVG pieces, a PDF print layout, and a text instruction file.
+3. App saves a snapshot of the parameters to the session.
+4. App renders a live SVG preview (server-generated).
+5. User exports a pattern packet.
+6. App delivers SVG pieces, a PDF print layout, and a text instruction file.
+
+## Design Sessions (State + UUID)
+- Every design session has a UUID.
+- Each save stores a snapshot of the current parameter set plus optional notes.
+- Sessions are the unit for future user ownership, sharing, and history.
 
 ## Inputs (Parameters)
 - Length
@@ -103,6 +109,10 @@ Behavior:
 - Depth
 - Seam allowance
 - Pocket placement
+ - Zipper location
+ - Zipper style
+ - Units
+ - Optional session name/notes (metadata)
 
 ## Outputs
 - SVG files for each pattern piece

@@ -20,6 +20,11 @@ export default class extends Controller {
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
     this.controls.enableDamping = true
+    this.onControlsStart = () => {
+      this.cameraAuto = false
+      this.desiredCameraPos = null
+    }
+    this.controls.addEventListener("start", this.onControlsStart)
 
     const ambient = new THREE.AmbientLight(0xffffff, 0.9)
     this.scene.add(ambient)
@@ -36,6 +41,7 @@ export default class extends Controller {
     this.desiredCameraPos = null
     this.desiredTarget = new THREE.Vector3()
     this.cameraInitialized = false
+    this.cameraAuto = false
 
     this.onResize = this.resize.bind(this)
     window.addEventListener("resize", this.onResize)
@@ -47,6 +53,9 @@ export default class extends Controller {
   }
 
   disconnect() {
+    if (this.controls && this.onControlsStart) {
+      this.controls.removeEventListener("start", this.onControlsStart)
+    }
     window.removeEventListener("resize", this.onResize)
     window.removeEventListener("design-session-params:updated", this.onParamsUpdated)
   }
@@ -154,7 +163,9 @@ export default class extends Controller {
 
     this.assembledBox = this.boundingBoxFor(items, unitScale, "assembled")
     this.flatBox = this.boundingBoxFor(items, unitScale, "flat")
-    this.fitCameraToBox(this.assembledBox, "assembled", true)
+    if (!this.cameraInitialized) {
+      this.fitCameraToBox(this.assembledBox, "assembled", true)
+    }
 
     this.resize()
   }
@@ -269,9 +280,15 @@ export default class extends Controller {
       mesh.quaternion.slerpQuaternions(flat.quaternion, assembled.quaternion, this.progress)
     })
 
-    if (this.desiredCameraPos) {
+    if (this.cameraAuto && this.desiredCameraPos) {
       this.camera.position.lerp(this.desiredCameraPos, 0.12)
       this.controls.target.lerp(this.desiredTarget, 0.12)
+      if (
+        this.camera.position.distanceTo(this.desiredCameraPos) < 0.01 &&
+        this.controls.target.distanceTo(this.desiredTarget) < 0.01
+      ) {
+        this.cameraAuto = false
+      }
     }
 
     this.controls.update()
@@ -448,6 +465,9 @@ export default class extends Controller {
         this.controls.target.copy(center)
         this.controls.update()
         this.cameraInitialized = true
+        this.cameraAuto = false
+      } else {
+        this.cameraAuto = true
       }
     }
   }

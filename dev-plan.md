@@ -107,6 +107,11 @@ Goal: real-time UX that updates preview on change.
 - Debounce input changes for smooth interactions.
 - Persist changes to Design Session UUID as the single source of truth.
 
+Status (completed):
+- Save now triggers cache-busted refreshes for preview SVG + panel thumbnails.
+- 3D preview re-fetches geometry on save without forcing camera resets.
+- Toggle 3D now handles camera recentering/angles; input changes no longer snap the view.
+
 ## 9) Export pipeline (SVGs, PDF layout, instructions)
 Goal: export a complete pattern packet.
 - Generate SVG files per pattern piece.

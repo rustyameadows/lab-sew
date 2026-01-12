@@ -22,7 +22,7 @@ export default class extends Controller {
     const paramsSnapshot = this.collectParams()
 
     try {
-      await fetch(`/design_sessions/${this.uuidValue}`, {
+      const response = await fetch(`/design_sessions/${this.uuidValue}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +32,11 @@ export default class extends Controller {
         credentials: "same-origin",
         body: JSON.stringify({ design_session: { params_snapshot: paramsSnapshot } })
       })
-      window.dispatchEvent(new CustomEvent("design-session-params:updated"))
+      if (!response.ok) throw new Error("Failed to save params")
+
+      const stamp = Date.now().toString()
+      this.refreshPreviewAssets(stamp)
+      window.dispatchEvent(new CustomEvent("design-session-params:updated", { detail: { stamp } }))
     } catch (error) {
       console.warn("Failed to save params", error)
     }
@@ -68,5 +72,27 @@ export default class extends Controller {
     })
 
     return { ...params, ...multiselect }
+  }
+
+  refreshPreviewAssets(stamp) {
+    const previewLink = document.querySelector("[data-preview-svg-link]")
+    if (previewLink) {
+      previewLink.href = this.withCacheBuster(previewLink.href, stamp)
+    }
+
+    const panelImages = document.querySelectorAll("[data-panel-preview]")
+    panelImages.forEach((img) => {
+      img.src = this.withCacheBuster(img.src, stamp)
+    })
+  }
+
+  withCacheBuster(url, stamp) {
+    try {
+      const parsed = new URL(url, window.location.origin)
+      parsed.searchParams.set("ts", stamp)
+      return parsed.toString()
+    } catch (error) {
+      return url
+    }
   }
 }

@@ -28,7 +28,9 @@
       <h2>Preview</h2>
       <div class="preview__links">
         <%= link_to "Debug JSON", design_session_geometry_path(@design_session.uuid), class: "builder__link" %>
-        <%= link_to "Preview SVG", design_session_preview_path(@design_session.uuid, format: :svg), class: "builder__link" %>
+        <%= link_to "Preview SVG", design_session_preview_path(@design_session.uuid, format: :svg),
+          class: "builder__link",
+          data: { preview_svg_link: true } %>
         <button type="button" class="builder__link" data-action="preview-3d#toggle">Toggle 3D</button>
       </div>
       <div
@@ -172,6 +174,7 @@
                 class="panel__svg"
                 src="<%= design_session_preview_path(@design_session.uuid, format: :svg, panel: panel["key"], scale: 8) %>"
                 alt="<%= panel["label"] || panel["key"] %> panel preview"
+                data-panel-preview="<%= panel["key"] %>"
               />
               <span><%= panel["label"] || panel["key"] %></span>
             </div>

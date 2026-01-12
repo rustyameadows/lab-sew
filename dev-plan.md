@@ -7,10 +7,11 @@
 4. Main UI scaffold (matches sketch)
 5. Geometry engine (interprets assemblies + parameters)
 6. SVG preview pipeline (server-rendered)
-7. Live update wiring (options -> preview)
-8. Export pipeline (SVGs, PDF layout, instructions)
-9. Validation, constraints, and UX polish
-10. Tests, QA, and release readiness
+7. 3D preview pipeline (Three.js)
+8. Live update wiring (options -> preview)
+9. Export pipeline (SVGs, PDF layout, instructions)
+10. Validation, constraints, and UX polish
+11. Tests, QA, and release readiness
 
 ---
 
@@ -83,29 +84,43 @@ Goal: render a reliable preview from the geometry engine.
 - Provide a controller endpoint returning SVG for a given session or parameter set.
 - Establish a consistent coordinate system and scale.
 
-Status (in progress):
+Status (completed):
 - Basic SVG renderer added to visualize panel rectangles.
+- Preview and panel SVG endpoints wired into the UI.
 
-## 7) Live update wiring (options -> preview)
+## 7) 3D preview pipeline (Three.js)
+Goal: assemble panels into an interactive 3D preview.
+- Render a Three.js canvas in the main preview area.
+- Assemble panel planes into a 3D form based on assembly definition metadata.
+- Animate a transition from flat layout to assembled form.
+- Keep a “Preview SVG” link for 2D reference.
+
+Status (completed):
+- Three.js preview canvas replaces the static image.
+- Toggle between flat and assembled states.
+- Rigid assembly uses panel seams for folding (not a generic box).
+- Preview stays synced to parameter changes via geometry refresh.
+
+## 8) Live update wiring (options -> preview)
 Goal: real-time UX that updates preview on change.
 - Connect Options inputs to preview refresh (Turbo/Hotwire or plain fetch).
 - Debounce input changes for smooth interactions.
 - Persist changes to Design Session UUID as the single source of truth.
 
-## 8) Export pipeline (SVGs, PDF layout, instructions)
+## 9) Export pipeline (SVGs, PDF layout, instructions)
 Goal: export a complete pattern packet.
 - Generate SVG files per pattern piece.
 - Assemble a printable PDF layout (single page or tiled; decide).
 - Export text instructions (plain text to start).
 - Provide a download action in the Export panel.
 
-## 9) Validation, constraints, and UX polish
+## 10) Validation, constraints, and UX polish
 Goal: reduce invalid states and improve clarity.
 - Add inline validation for measurement ranges.
 - Define constraints (depth <= width/height, etc.).
 - Show helpful warnings; disable export if invalid.
 
-## 10) Tests, QA, and release readiness
+## 11) Tests, QA, and release readiness
 Goal: ensure reliability as functionality grows.
 - Unit tests for geometry engine and conversions.
 - Request/feature tests for preview and export endpoints.

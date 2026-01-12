@@ -9,6 +9,7 @@ module Patterns
       {
         assembly_key: @assembly_definition&.key,
         params: @params,
+        preview_3d: definition["preview_3d"],
         panels: build_panels,
         seams: Array(definition["seams"]),
         steps: Array(definition["steps"])

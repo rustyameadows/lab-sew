@@ -32,6 +32,7 @@ export default class extends Controller {
         credentials: "same-origin",
         body: JSON.stringify({ design_session: { params_snapshot: paramsSnapshot } })
       })
+      window.dispatchEvent(new CustomEvent("design-session-params:updated"))
     } catch (error) {
       console.warn("Failed to save params", error)
     }

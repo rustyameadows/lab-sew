@@ -19,16 +19,25 @@
   <% assembly_selected = assembly.present? %>
 
   <section class="builder__layout">
-    <section class="builder__preview" aria-label="Preview">
+    <section
+      class="builder__preview"
+      aria-label="Preview"
+      data-controller="preview-3d"
+      data-preview-3d-geometry-url-value="<%= design_session_geometry_path(@design_session.uuid) %>"
+    >
       <h2>Preview</h2>
-      <%= link_to "Debug JSON", design_session_geometry_path(@design_session.uuid), class: "builder__link" %>
-      <div class="preview__canvas" role="img" aria-label="Pattern preview">
+      <div class="preview__links">
+        <%= link_to "Debug JSON", design_session_geometry_path(@design_session.uuid), class: "builder__link" %>
+        <%= link_to "Preview SVG", design_session_preview_path(@design_session.uuid, format: :svg), class: "builder__link" %>
+        <button type="button" class="builder__link" data-action="preview-3d#toggle">Toggle 3D</button>
+      </div>
+      <div
+        class="preview__canvas"
+        role="img"
+        aria-label="3D preview"
+      >
         <% if assembly_selected %>
-          <img
-            class="preview__svg"
-            src="<%= design_session_preview_path(@design_session.uuid, format: :svg) %>"
-            alt="Pattern preview"
-          />
+          <canvas class="preview__three" data-preview-3d-target="canvas"></canvas>
         <% else %>
           <span>Select an assembly to preview panels.</span>
         <% end %>

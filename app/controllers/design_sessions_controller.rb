@@ -40,6 +40,8 @@ class DesignSessionsController < ApplicationController
     effective_params = defaults.merge(params_snapshot)
 
     geometry = Patterns::GeometryEngine.new(assembly_definition: assembly, params: effective_params).call
+    preview_3d = assembly.definition_json["preview_3d"]
+    geometry[:preview_3d] ||= preview_3d if preview_3d.present?
     render json: geometry
   end
 

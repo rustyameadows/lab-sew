@@ -77,9 +77,33 @@ class AssemblyDefinition < ApplicationRecord
       panels: [
         { key: "front", label: "Front", width_param: "width", height_param: "height" },
         { key: "back", label: "Back", width_param: "width", height_param: "height" },
-        { key: "gusset", label: "Gusset", width_param: "width", height_param: "depth" },
+        { key: "left_side", label: "Left side", width_param: "depth", height_param: "height" },
+        { key: "right_side", label: "Right side", width_param: "depth", height_param: "height" },
+        { key: "bottom", label: "Bottom", width_param: "width", height_param: "depth" },
         { key: "zipper_panel", label: "Zipper panel", width_param: "width", height_param: "depth" }
       ],
+      preview_3d: {
+        layout: "box",
+        width_param: "width",
+        height_param: "height",
+        depth_param: "depth",
+        root: "front",
+        panels: {
+          front: { role: "front" },
+          back: { role: "back" },
+          left_side: { role: "side_left" },
+          right_side: { role: "side" },
+          bottom: { role: "bottom" },
+          zipper_panel: { role: "top" }
+        },
+        seams: [
+          { parent: "front", parent_edge: "right", child: "right_side", child_edge: "left", angle: 90 },
+          { parent: "front", parent_edge: "left", child: "left_side", child_edge: "right", angle: -90 },
+          { parent: "front", parent_edge: "bottom", child: "bottom", child_edge: "top", angle: -90 },
+          { parent: "front", parent_edge: "top", child: "zipper_panel", child_edge: "bottom", angle: 90 },
+          { parent: "right_side", parent_edge: "right", child: "back", child_edge: "left", angle: 90 }
+        ]
+      },
       seams: [],
       steps: []
     }
@@ -97,10 +121,33 @@ class AssemblyDefinition < ApplicationRecord
       panels: [
         { key: "front", label: "Front", width_param: "body_width", height_param: "body_height" },
         { key: "back", label: "Back", width_param: "body_width", height_param: "body_height" },
-        { key: "side_gusset", label: "Side gusset", width_param: "base_depth", height_param: "body_height" },
+        { key: "side_left", label: "Side left", width_param: "base_depth", height_param: "body_height" },
+        { key: "side_right", label: "Side right", width_param: "base_depth", height_param: "body_height" },
         { key: "base", label: "Base", width_param: "body_width", height_param: "base_depth" },
         { key: "strap", label: "Strap", width_param: "strap_length", height_param: "strap_width" }
       ],
+      preview_3d: {
+        layout: "open_box",
+        width_param: "body_width",
+        height_param: "body_height",
+        depth_param: "base_depth",
+        root: "front",
+        panels: {
+          front: { role: "front" },
+          back: { role: "back" },
+          side_left: { role: "side_left" },
+          side_right: { role: "side" },
+          base: { role: "bottom" },
+          strap: { role: "strap" }
+        },
+        seams: [
+          { parent: "front", parent_edge: "right", child: "side_right", child_edge: "left", angle: 90 },
+          { parent: "front", parent_edge: "left", child: "side_left", child_edge: "right", angle: -90 },
+          { parent: "front", parent_edge: "bottom", child: "base", child_edge: "top", angle: -90 },
+          { parent: "side_right", parent_edge: "right", child: "back", child_edge: "left", angle: 90 },
+          { parent: "side_left", parent_edge: "left", child: "back", child_edge: "right", angle: -90 }
+        ]
+      },
       seams: [],
       steps: []
     }

@@ -1,7 +1,7 @@
 # Product Spec (Draft)
 
 ## Summary
-A Rails app for generating sewing patterns from user-defined parameters across multiple assemblies. The first assembly is a simple 3D zipper pouch to validate the workflow. Users tune measurements (length, width, depth, seam allowance, pocket placement), see a live preview rendered from server-generated SVG, and export a complete pattern packet (SVG pieces, printable PDF, and a text instruction file). Core logic is a geometry engine that produces accurate pattern pieces and assembly steps from stored assembly definitions.
+A Rails app for generating sewing patterns from user-defined parameters across multiple assemblies. The first assembly is a simple 3D zipper pouch to validate the workflow. Users tune measurements (length, width, depth, seam allowance, pocket placement), see a live preview (2D SVG + 3D assembly), and export a complete pattern packet (SVG pieces, printable PDF, and a text instruction file). Core logic is a geometry engine that produces accurate pattern pieces and assembly steps from stored assembly definitions.
 
 ## Goals
 - Make it easy to define pouch parameters and immediately preview the result.
@@ -22,7 +22,7 @@ A Rails app for generating sewing patterns from user-defined parameters across m
 Reference sketch: `Sewing pattern app.png` (repo root).
 
 Layout:
-- Left column: large **Preview** area showing the current assembly visualization.
+- Left column: large **Preview** area showing the current assembly visualization (3D canvas).
 - Bottom row (left): **Panels** strip showing thumbnails for individual pattern pieces.
 - Right column: **Options** panel with inputs and controls.
 - Bottom right: **Export** panel with name field and export actions.
@@ -39,6 +39,14 @@ Export panel (as sketched):
 - Secondary action: share.
 
 Note: Admin/project management UI will be added later; this view is the core functionality. The layout should remain assembly-agnostic, with options changing per assembly type.
+
+## 3D Preview
+- The main preview is a Three.js canvas that assembles rigid panels into a 3D form.
+- Assembly uses the panel + seam definitions (edge-to-edge folds) rather than a generic box model.
+- This is a dimensional preview, not a cloth simulation or photorealistic render.
+- Users can rotate/zoom the preview.
+- The preview transitions between a flat panel layout and the assembled form.
+- A “Preview SVG” link remains available for the 2D layout reference.
 
 ## Options Spec (Main View)
 All options update the preview and pattern output. Inputs accept numeric values, with inline validation and units shown. The options panel is assembly-agnostic; individual assemblies define their own parameter sets.
@@ -98,7 +106,7 @@ Behavior:
 3. User enters the builder view for that project (Design Session UUID).
 4. User adjusts parameters (length, width, depth, seam allowance, pocket placement).
 5. App saves a snapshot of the parameters to the session.
-6. App renders a live SVG preview (server-generated).
+6. App renders a live 2D SVG preview and a 3D assembly preview.
 7. User exports a pattern packet.
 8. App delivers SVG pieces, a PDF print layout, and a text instruction file.
 
@@ -133,6 +141,7 @@ Behavior:
 ## System Notes
 - Rails app serves UI and generates SVG server-side.
 - Geometry engine interprets stored assembly definitions and parameters.
+- 3D preview uses seam metadata to build a rigid assembly in Three.js.
 
 ## Open Questions
 - What units are supported (inches, cm) and how are they displayed?

@@ -1,5 +1,3 @@
-require Rails.root.join("app/services/patterns/geometry_engine").to_s
-
 class DesignSessionsController < ApplicationController
   protect_from_forgery with: :null_session
 
@@ -43,6 +41,39 @@ class DesignSessionsController < ApplicationController
 
     geometry = Patterns::GeometryEngine.new(assembly_definition: assembly, params: effective_params).call
     render json: geometry
+  end
+
+  def preview
+    design_session = DesignSession.find_by!(uuid: params[:uuid])
+    assembly = design_session.assembly_definition
+
+    unless assembly
+      render plain: "Assembly not set", status: :unprocessable_entity
+      return
+    end
+
+    defaults = assembly.parameter_defaults
+    params_snapshot = (design_session.params_snapshot || {}).deep_stringify_keys
+    effective_params = defaults.merge(params_snapshot)
+
+    geometry = Patterns::GeometryEngine.new(assembly_definition: assembly, params: effective_params).call
+
+    if params[:panel].present?
+      panels = Array(geometry[:panels] || geometry["panels"]).select do |panel|
+        panel_key = panel[:key] || panel["key"]
+        panel_key.to_s == params[:panel].to_s
+      end
+      geometry = geometry.merge(panels: panels)
+    end
+
+    scale = params[:scale].to_f
+    scale = 24.0 unless scale.positive?
+
+    svg = Patterns::SvgRenderer.new(geometry, scale: scale).call
+    svg = svg.gsub(/<text\b[^>]*>.*?<\/text>/m, "") if params[:panel].present?
+    svg = svg.gsub(/rx="[^"]*"/, 'rx="0"').gsub(/ry="[^"]*"/, 'ry="0"')
+
+    render plain: svg, content_type: "image/svg+xml"
   end
 
   private

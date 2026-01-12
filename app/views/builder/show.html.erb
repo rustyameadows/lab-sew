@@ -22,8 +22,16 @@
     <section class="builder__preview" aria-label="Preview">
       <h2>Preview</h2>
       <%= link_to "Debug JSON", design_session_geometry_path(@design_session.uuid), class: "builder__link" %>
-      <div class="preview__canvas" role="img" aria-label="Pattern preview placeholder">
-        SVG preview will render here.
+      <div class="preview__canvas" role="img" aria-label="Pattern preview">
+        <% if assembly_selected %>
+          <img
+            class="preview__svg"
+            src="<%= design_session_preview_path(@design_session.uuid, format: :svg) %>"
+            alt="Pattern preview"
+          />
+        <% else %>
+          <span>Select an assembly to preview panels.</span>
+        <% end %>
       </div>
     </section>
 
@@ -150,7 +158,14 @@
       <div class="panels__strip">
         <% if panels.any? %>
           <% panels.each do |panel| %>
-            <div class="panel__thumb"><%= panel["label"] || panel["key"] %></div>
+            <div class="panel__thumb">
+              <img
+                class="panel__svg"
+                src="<%= design_session_preview_path(@design_session.uuid, format: :svg, panel: panel["key"], scale: 8) %>"
+                alt="<%= panel["label"] || panel["key"] %> panel preview"
+              />
+              <span><%= panel["label"] || panel["key"] %></span>
+            </div>
           <% end %>
         <% else %>
           <div class="panel__thumb">No panels yet</div>

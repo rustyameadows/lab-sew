@@ -83,6 +83,9 @@ Goal: render a reliable preview from the geometry engine.
 - Provide a controller endpoint returning SVG for a given session or parameter set.
 - Establish a consistent coordinate system and scale.
 
+Status (in progress):
+- Basic SVG renderer added to visualize panel rectangles.
+
 ## 7) Live update wiring (options -> preview)
 Goal: real-time UX that updates preview on change.
 - Connect Options inputs to preview refresh (Turbo/Hotwire or plain fetch).
